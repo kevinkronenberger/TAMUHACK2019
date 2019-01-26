@@ -8,6 +8,6 @@ app = Flask(__name__)
 @app.route('/', methods = ['POST'])
 def result():
     content = request.get_json()
-    req.post(pySauce, json = content);
+    req.post(pySauce, json = content)
 
     return  'Received!'
