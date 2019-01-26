@@ -1,3 +1,7 @@
-const post = require('./sender/send.js');
+const callPython = require('./sender/send.js');
 
-post('http://localhost:4000/');
+data = {
+    message: "Hello World"
+}
+
+callPython('http://localhost:4000/', data);
