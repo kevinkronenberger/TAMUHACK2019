@@ -3,6 +3,9 @@ var sectionArray = []
 var courseArray = []
 var courseDict ={}
 var courseID = 0
+var dayArray = []
+var sessionID
+const URL = ""
 class professor{
 	constructor(name, avoid){
 		this.name = name
@@ -25,7 +28,22 @@ class course{
 		this.campus = campus
 	}
 }
-
+class dayAvoid{
+	constructor(day,startHour, endHour, startMinute, endMinute){
+		this.day = day
+		this.startHour = startHour
+		this.startMinute = startMinute
+		this.endHour = endHour
+		this.endMinute = endMinute
+	}
+}
+class constraints{
+	constructor(courseArray, avoidTimes, sessionId){
+		this.courses = courseArray
+		this.avoidDays = avoidTimes
+		this.sessionId = sessionId
+	}
+}
 function addProf(){
 	var profName = document.getElementById("profName").value
 	var avoid = document.getElementById("profAvoid").checked
@@ -183,3 +201,53 @@ function editCourseDesc(course){
 	"<h5 class=\"prof_and_section\"> sections </h5>" +
 	"<p class\"prof_and_section>" + sects + "</p>"
 }
+function sendSchedule(schedule){
+	xmlHttp = new XMLHttpRequest()
+	xmlHttp.open("post","/json-handler")
+	xmlHttp.send(JSON.stringify(schedule))
+}
+function submitSchedule(){
+	populateDays()
+	console.log(courseArray)
+	console.log(new constraints(courseArray,dayArray,sessionID))
+	
+}
+function populateDays(){
+	var day;
+	for(i = 0; i < 7; ++i){
+		if(document.getElementById("a"+(i+1)).checked){
+			if(i==1){
+				day = "m"
+			}else if(i==2){
+				day = "t"
+			}else if(i==3){
+				day = "w"
+			}else if(i==4){
+				day = "r"
+			}else if(i==5){
+				day = "f"
+			}else if(i==6){
+				day = "s"
+			}else if(i==7){
+				day = "u"
+			}
+			startTime = document.getElementById("s" +( i+1)).value
+			endTime = document.getElementById("e" +( i+1)).value
+		dayArray.push(new dayAvoid(day, startTime.split(":")[0], startTime.split(":")[1], endTime.split(":")[0], endTime.split(":")[1]))
+		}
+	}
+}
+function httpGetID()
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() { 
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            setSessionID(xmlHttp.responseText)
+    }
+    xmlHttp.open("GET", URL, true)
+    xmlHttp.send(null)
+}
+function setSessionID(id){
+	sessionID = id
+}
+//window.onload = httpGetID
