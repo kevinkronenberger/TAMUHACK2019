@@ -7,8 +7,8 @@
 		<p> Please input what courses you need to take this year </p>
 		<fieldset>
 			<p> Department Acronym:<input type="text" id="dep"> Course #: <input type="text" id="courseNum"> Honors section: <input type="checkbox" id="honors">
-				<select id="campuse"> Campus
-					<option value="collegestation"> College Station </option>
+				<select id="campus"> Campus
+					<option value="college station"> College Station </option>
 					<option value="galveston"> Galveston </option>
 					<option value="qatar"> Qatar </option>
 				</select>
@@ -27,7 +27,27 @@
 			</fieldset>
 			<div id="sectionList"></div>
 		<br>
-		<button type="button" onclick="addcourse">add course</button>
+		<button type="button" onclick="addCourse()">add course</button>
+		</fieldset>
+		<div id="courseList"></div>
+		<h2> Prefered times </h2>
+		<p> We will avoid scheduling classes during these times </p>
+		<fieldset>
+		<table>
+			<tr>
+				<th> </th> <th> Monday </th> <th> Tuesday </th> <th> Wednesday </th> <th> Thursday </th> <th> Friday </th> <th> Saturday </th> <th> Sunday </th>
+			</tr>
+			<tr>
+				<th>Activated?</th> <td><input type="checkbox" id="a1"></td><td><input type="checkbox" id="a2"></td><td><input type="checkbox" id="a3"></td><td><input type="checkbox" id="a4"></td><td><input type="checkbox" id="a5"></td><td><input type="checkbox" id="a6"></td><td><input type="checkbox" id="a7"></td>
+			</tr>
+			<tr>
+				<th>start time</th> <td><input type=" text" id="s1"></td><td><input type=" text" id="s2"></td><td><input type=" text" id="s3"></td><td><input type=" text" id="s4"></td><td><input type=" text" id="s5"></td><td><input type=" text" id="s6"></td><td><input type=" text" id="s7"></td>
+			</tr>
+			<tr>
+				<th>End time</th> <td><input type=" text" id="e1"></td><td><input type=" text" id="e2"></td><td><input type=" text" id="e3"></td><td><input type=" text" id="e4"></td><td><input type=" text" id="e5"></td><td><input type=" text" id="e6"></td><td><input type=" text" id="e7"></td>
+			</tr>
+		</table>
+		<button type="button" onclick="submitSchedule">Generate Schedule</button>
 		</fieldset>
 	</body>
 </html>
