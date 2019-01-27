@@ -6,8 +6,8 @@
 		<h2> required courses </h2>
 		<p> Please input what courses you need to take this year </p>
 		<fieldset>
-			<p> Department Acronym:<input type="text" id="dep"> Course #: <input type="text" id="coursenum"> Honors section: <input type="checkbox" id="honors">
-				<select> Campus
+			<p> Department Acronym:<input type="text" id="dep"> Course #: <input type="text" id="courseNum"> Honors section: <input type="checkbox" id="honors">
+				<select id="campuse"> Campus
 					<option value="collegestation"> College Station </option>
 					<option value="galveston"> Galveston </option>
 					<option value="qatar"> Qatar </option>
@@ -27,7 +27,7 @@
 			</fieldset>
 			<div id="sectionList"></div>
 		<br>
-		<button type="button">add course</button>
+		<button type="button" onclick="addcourse">add course</button>
 		</fieldset>
 	</body>
 </html>
