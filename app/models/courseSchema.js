@@ -14,8 +14,10 @@ var courseSchema = new Schema({
                     
         sectionNum: Number,
 
-        profLastName: String, 
-        profFirstName: String,
+        //A given professor's first and last name should be in the same index of the profLastNames and profFirstNames arrays, respectively.
+	//Thus, for a given index i, a a professors' full name can be obtained from profFirstNames[i] + profLastNames[i].
+        profLastNames: [{ type: String }],
+        profFirstNames: [{ type: String }],
 
         meetings: [{
 
@@ -24,8 +26,6 @@ var courseSchema = new Schema({
             duration: { hr: Number, min: Number },
             
             daysOfWeek: [{ type: String }], //M-F, S (for Sunday), A (for Saturday)
-
-            //Possible feature: Add type to differentiate between recitations, lectures, etc.
 
         }],
 
