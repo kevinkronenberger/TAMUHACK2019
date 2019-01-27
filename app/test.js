@@ -1,3 +1,5 @@
+//This script fires a POST request to Flask server with neccessary 
+
 const callPython = require('./sender/send.js');
 
 data = {
