@@ -9,11 +9,17 @@ app = Flask(__name__) #Flask App
 def result():
     #magic- don't touch
     #print(request)
-    print(req)
     reqJSON = request.get_json()
-    print(reqJSON);
+    print(reqJSON)
     CourseNum = reqJSON["courseNum"]
     DeptName = reqJSON["DeptName"]
     resJSON = json.dumps(getCourseInfo(DeptName, CourseNum))
-    req.post(pySauce, json = resJSON) #Make a post request with proper data to Node Server
-    return  'Received!' #sends response to Node.js
+
+    resJSON = '{\"batch\": ' + resJSON + '}'
+    print("Sending to Node")
+    # f = open('debugFile.txt', 'w')
+    # f.write(resJSON)
+    # f.close()
+    headers = {'content-type': 'application/json'}
+    req.post(pySauce, data = resJSON, headers = headers) #Make a post request with proper data to Node Server
+    return  resJSON #sends response to Node.js

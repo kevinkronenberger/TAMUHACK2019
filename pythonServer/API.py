@@ -3,19 +3,22 @@ from urllib.request import urlopen as uReq
 import mechanize
 import re
 import json
+
 def getCourseInfo(DeptName, CourseNum):
+
+        CourseNum = str(CourseNum)
         br = mechanize.Browser()
 
         br.set_handle_robots(False)   # ignore robots
         br.set_handle_refresh(False)
         response = br.open('https://compass-ssb.tamu.edu/pls/PROD/bwckschd.p_disp_dyn_sched')
         #print (response.read())     # the text of the page
-        response1 = br.response()  # get the response again
+        #response1 = br.response()  # get the response again
 
         br.form = list(br.forms())[0]         # works when form has no name
         for control in br.form.controls:
             if control.type == "select":  # means it's class ClientForm.SelectControl
-                control.value = ['201911']
+                control.value = ['201931']
 
         for control in br.form.controls:
             if control.type == "submit":
@@ -110,5 +113,11 @@ def getCourseInfo(DeptName, CourseNum):
                         "meetings": TimeList,
                 }
                 DictList.append(singleDict)
-        print(DictList)
-        return json.dumps(DictList)
+        # print(DictList)
+        # file = open('ClassSchedule.txt', 'w', encoding="utf-8")
+        # json.dump(DictList, file)
+        # file.close()
+        return DictList
+
+data = getCourseInfo("ECEN", 214)
+
