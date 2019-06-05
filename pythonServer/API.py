@@ -118,6 +118,3 @@ def getCourseInfo(DeptName, CourseNum):
         # json.dump(DictList, file)
         # file.close()
         return DictList
-
-data = getCourseInfo("ECEN", 214)
-
