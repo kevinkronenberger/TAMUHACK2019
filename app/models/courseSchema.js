@@ -11,7 +11,7 @@ var courseSchema = new Schema({
     
     profName: String,
     
-    meetings: [ { type: String} ],
+    meetings: [ { type: String} ]
 
 });
 

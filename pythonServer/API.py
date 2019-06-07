@@ -36,7 +36,7 @@ def getCourseInfo(DeptName, CourseNum):
             if control.type == "submit":
                 response = br.submit()
 
-        soup = BeautifulSoup(br.response.read(), 'html.parser')
+        soup = BeautifulSoup(br.response().read(), 'html.parser')
 
 
         SectionList = []
@@ -49,9 +49,9 @@ def getCourseInfo(DeptName, CourseNum):
                         # h now contains the following info: Honors, CRN, deptName, courseNum, and sectionNum
                         h = h.split(' - ')
                         if(h[0][0:3] == 'HNR'):
-                        singleSection['Honors'] = True
+                                singleSection['honors'] = True
                         else:
-                        singleSection['Honors'] = False
+                                singleSection['honors'] = False
                         singleSection['CRN'] = int(h[1])
                         singleSection['deptName'] = h[2][0:4]
                         singleSection['courseNum'] = h[2][5:]
@@ -62,17 +62,17 @@ def getCourseInfo(DeptName, CourseNum):
                         d = d.find('td')
 
                         a = d.find('a')  # 'a' contains the professor names
+                        singleSection['profName'] = a.text
                         d = d.find('table')
                         k = []
                         for i in d.find_all('td'):
-                        k.append(i.text)
+                                k.append(i.text)
                         i = 0
-                        j = 0
-                        singleSection['Meetings'] = []
-                        while((i+7) < len(k)):
-                        meeting = k[i+1] + ' ' + k[i+2]
-                        singleSection['Meetings'].append(meeting)
-                        i += 7
+                        singleSection['meetings'] = []
+                        while((i+7) <= len(k)):
+                                meeting = k[i+1] + ' ' + k[i+2]
+                                singleSection['meetings'].append(meeting)
+                                i += 7
                         SectionList.append(singleSection)
         return SectionList
         #OLDER VERSION OF THE WEBSCRAPER THAT doesn't get the meeting times right
