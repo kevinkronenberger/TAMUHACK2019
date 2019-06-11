@@ -7,7 +7,7 @@ var courseSchema = new Schema({
 
     CRN: String,
 
-    dept: String,
+    deptName: String,
 
     courseNum: String,
 

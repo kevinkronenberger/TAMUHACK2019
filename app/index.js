@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const app = express();
 
 //once database is connected, begin listening for requests
-mongoose.connect('mongodb://localhost:27017/scheduler');
+mongoose.connect('mongodb://localhost:27017/scheduler', {useNewUrlParser: true});
 mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connectionerror:'));
@@ -18,7 +18,7 @@ db.once('open', function() {
     app.use('/', require('./routes/router.js'));
 
     app.use(function(err,req,res,next){
-        res.status(418).send({error: err._message})
+        res.send({error: err._message})
     });
 
     app.listen(4000, function(){

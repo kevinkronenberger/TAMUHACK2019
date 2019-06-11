@@ -1,2 +1,2 @@
 # TAMUHACK2019
-#this is for the tamuhack event
+#this was from the tamuhack event from 2019.

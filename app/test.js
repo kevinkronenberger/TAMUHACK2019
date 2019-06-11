@@ -40,11 +40,9 @@ app.post('/', JSONParser, function(req, res){
             profName : data.profName,
             meetings : data.meetings 
         });
-        Sect.save().then(function(){
-            console.log(('Data Saved: ' + i));
-            res.send();
-        });
+        Sect.save();
     }
+    res.send();
     
 });
 
