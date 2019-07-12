@@ -67,6 +67,12 @@ def getCourseInfo(DeptName, CourseNum):
                         i = 0
                         singleSection['meetings'] = []
                         singleSection['profName'] = k[6]
+
+                        if(singleSection['profName'][-4:] == ' (P)'):
+                                singleSection['profName'] = singleSection['profName'][:-4]
+                        if(if(singleSection['profName'][-1] == ' '):
+                           singleSection['profName']=singleSection['profName'][:-1])
+
                         while((i+7) <= len(k)):
                                 meeting = k[i+1] + ' ' + k[i+2]
                                 singleSection['meetings'].append(meeting)

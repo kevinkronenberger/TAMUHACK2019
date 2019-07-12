@@ -1,6 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+require('dotenv').config();
+
+port = process.env.PORT || 4000
 
 const app = express();
 
@@ -21,7 +24,7 @@ db.once('open', function() {
         res.send({error: err._message})
     });
 
-    app.listen(4000, function(){
+    app.listen(port, function(){
         console.log("Listening on port 4000")
     });
 });
