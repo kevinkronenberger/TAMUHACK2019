@@ -18,7 +18,7 @@ def getCourseInfo(DeptName, CourseNum):
         br.form = list(br.forms())[0]         # works when form has no name
         for control in br.form.controls:
             if control.type == "select":  # means it's class ClientForm.SelectControl
-                control.value = ['201931']
+                control.value = ['202011']
 
         for control in br.form.controls:
             if control.type == "submit":
@@ -55,7 +55,7 @@ def getCourseInfo(DeptName, CourseNum):
                         singleSection['CRN'] = int(h[1])
                         singleSection['deptName'] = h[2][0:4]
                         singleSection['courseNum'] = h[2][5:]
-                        singleSection['sectionNum'] = int(h[3])
+                        singleSection['sectionNum'] = h[3][0:4]
                         # navigating d up and over to the meeting info
                         d = header.find_parent('tr')
                         d = d.find_next_sibling()

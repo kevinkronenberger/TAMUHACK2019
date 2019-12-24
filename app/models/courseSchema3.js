@@ -1,6 +1,12 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+var meetingSchema = new Schema({
+    start_time: Number,
+    end_time: Number,
+    days: String
+});
+
 var courseSchema = new Schema({
 
     honors: Boolean,
@@ -15,9 +21,7 @@ var courseSchema = new Schema({
 
     profName: String,
 
-    meetings: [{
-        type: String
-    }]
+    meetings: [meetingSchema]
 
 });
 

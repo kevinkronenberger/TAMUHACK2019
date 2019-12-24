@@ -5,5 +5,5 @@ start node app/index
 echo Starting Python
 set FLASK_APP=pythonServer/server.py
 start flask run
-echo "It is done, my master"
+echo Everything should be up and running
 pause
