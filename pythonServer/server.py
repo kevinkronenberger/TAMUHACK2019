@@ -2,7 +2,7 @@ import requests as req
 import json
 from flask import Flask, request
 from API import getCourseInfo
-pySauce = 'http://localhost:4000/' #URL of Node Server
+pySauce = 'http://localhost:4000/api' #URL of Node Server
 
 app = Flask(__name__) #Flask App 
 @app.route('/', methods = ['POST'])

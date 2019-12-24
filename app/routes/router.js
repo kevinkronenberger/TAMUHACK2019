@@ -7,6 +7,7 @@ var jsonParser = bodyParser.json()
 var urlextendedParser = bodyParser.urlencoded({extended : false})
 
 
+
 function parseTime(timestr) {
     splitstr = timestr.split(':')
     var start_time
@@ -39,7 +40,7 @@ function parseTime(timestr) {
     return retobj
 }
 
-router.post('/', jsonParser, function (req, res) {
+router.post('/api', jsonParser, function (req, res) {
     console.log("POST request recieved!");
     console.log((req.body.batch.length) + ' Sections Were Found!');
     console.log(req.body.batch.length)
@@ -98,8 +99,12 @@ router.post('/py', urlextendedParser, function(req,res,next){
         }
     });
 })
+
 router.get('/', function (req, res, next) {
-   res.status(200).sendFile('C:/Users/willp/Desktop/Code/TAMUHack2019/TAMUHACK2019/app/dummy.html')
+    res.sendFile('C:/Users/willp/Desktop/Code/TAMUHack2019/TAMUHACK2019/app/public2/dummy.html')
+})
+router.get('/dummy.js', function (req, res, next) {
+    res.sendFile('C:/Users/willp/Desktop/Code/TAMUHack2019/TAMUHACK2019/app/public2/dummy.js')
 })
 
 
