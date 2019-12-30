@@ -41,20 +41,25 @@ function parseTime(timestr) {
 }
 
 router.post('/api', jsonParser, function (req, res) {
-    console.log("POST request recieved!");
+    console.log("POST request recieved at /api!");
     console.log((req.body.batch.length) + ' Sections Were Found!');
-    console.log(req.body.batch.length)
+    var TBA = false;
     for (i = 0; i < req.body.batch.length; i++) {
         var data = req.body.batch[i];
         var MeetingDays = []
         for(var j = 0; j<data.meetings.length; j++){
-            MeetingDays.push(parseTime(data.meetings[j]))
+            if(data.meetings[j].substring(0,3) != "TBA"){
+                MeetingDays.push(parseTime(data.meetings[j]))
+            }
+            else{
+                TBA = true
+            }
         }
         var Sect = new courseSect({
             honors: data.honors,
             deptName: data.deptName,
             courseNum: data.courseNum,
-            section: data.section,
+            section: data.sectionNum,
             CRN: data.CRN,
             profName: data.profName,
             meetings: MeetingDays
@@ -62,21 +67,26 @@ router.post('/api', jsonParser, function (req, res) {
         //console.log(Sect)
         Sect.save();
     }
+    console.log("New Course Added to database")
+    if (TBA) console.log("Some Sections are TBA")
     res.status(200).send();
 
 });
 
 router.post('/py', urlextendedParser, function(req,res,next){
-    console.log(req.body.deptName)
+    console.log("Call to /py for " + req.body.deptName + " " + req.body.courseNum + " Sections")
     var inDatabase = false;
     var FoundCourse;
-    courseSect.find({deptName: req.body.deptName, courseNum: req.body.courseNum}).then(function(result, err){
+    courseSect.find({
+            deptName: req.body.deptName,
+            courseNum: req.body.courseNum
+        }).then(function (result, err) {
         if(err){
             console.log(err)
         }
         else{
             if((result != undefined) && (result.length != 0 )){
-                console.log("Not in Database \nResult = ")
+                console.log("Found in Database!\nResult = ")
                 console.log(result)
                 inDatabase = true;
                 FoundCourse = result
@@ -98,7 +108,7 @@ router.post('/py', urlextendedParser, function(req,res,next){
             res.send(FoundCourse);
         }
     });
-})
+});
 
 router.get('/', function (req, res, next) {
     res.sendFile('C:/Users/willp/Desktop/Code/TAMUHack2019/TAMUHACK2019/app/public2/dummy.html')
