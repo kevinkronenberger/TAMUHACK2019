@@ -1,12 +1,12 @@
 const courseSect = require('../models/courseSchema3.js')
 const mongoose = require('mongoose')
 
-mongoose.connect('mongodb://localhost:27017/scheduler', {useNewUrlParser: true});
-mongoose.Promise = global.Promise;
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connectionerror:'));
+// mongoose.connect('mongodb://localhost:27017/scheduler', {useNewUrlParser: true});
+// mongoose.Promise = global.Promise;
+// var db = mongoose.connection;
+// db.on('error', console.error.bind(console, 'connectionerror:'));
 
-console.log("Connected to database");
+//console.log("Connected to database");
 
 function parseTime(timestr) {
     splitstr = timestr.split(':')
@@ -40,7 +40,7 @@ function parseTime(timestr) {
     return retobj
 }
 
-function collisionCheck(combo){ //still untested
+function collisionCheck(combo){
     let n = combo.length;
     for(let i = 0; i < n; i++){
         for(let j = i+1; j < n; j++){
@@ -75,14 +75,17 @@ async function MakeSchedule(courses){
         let course = courses[i].substring(5)
         //console.log(dept,course)
         let result = await courseSect.find({deptName: dept, courseNum: course});
-        //console.log(result)
-        allcourses.push(result)
+        if(result == ""){//Course not found in database
+            console.error("Unknown Course: "+dept+" "+course)
+        }
+        else{
+            allcourses.push(result)
+        }
     }
     let n = allcourses.length
     let indeces = new Array(n).fill(0);
     let cont = true
-    testArray = [[11,12,13],[21,22,23],[31,32,33]]
-    
+    ValidCombos = []
     while(cont){
         PossCombo = []
         for(let i = 0; i<n; i++){
@@ -104,63 +107,25 @@ async function MakeSchedule(courses){
             indeces[i] = 0
         }
         if(collisionCheck(PossCombo)){
-            console.log("---------NewCombo-------------")
+            //console.log("---------NewCombo-------------")
             validCount++;
-            for(let i = 0; i<n; i++){
-                console.log(PossCombo[i].deptName, PossCombo[i].courseNum, PossCombo[i].section)
-            }   
+            // for(let i = 0; i<n; i++){
+            //     console.log(PossCombo[i].deptName, PossCombo[i].courseNum, PossCombo[i].section)
+            // }
+            ValidCombos.push(PossCombo)
         }
     }
     console.log(validCount + " possible schedules found")
+    return ValidCombos
 }
 
 
-var courses = [{
-        "meetings": [
-            "2:20 pm - 3:35 pm TR",
-            "11:10 am - 2:00 pm R"
-        ],
-        "_id": "5e0150d2bfc93e0104bb81a6",
-        "honors": true,
-        "deptName": "ECEN",
-        "courseNum": "326",
-        "CRN": "41234",
-        "profName": "Kamran   Entesari",
-        "__v": 0
-    },
-    {
-        "meetings": [
-            "2:20 pm - 3:35 pm TR",
-            "8:00 am - 10:50 am R"
-        ],
-        "_id": "5e0150d2bfc93e0104bb81a7",
-        "honors": false,
-        "deptName": "ECEN",
-        "courseNum": "326",
-        "CRN": "34975",
-        "profName": "Kamran   Entesari",
-        "__v": 0
-    },
-    {
-        "meetings": [
-            "2:20 pm - 3:35 pm TR",
-            "11:10 am - 2:00 pm R"
-        ],
-        "_id": "5e0150d2bfc93e0104bb81a8",
-        "honors": false,
-        "deptName": "ECEN",
-        "courseNum": "326",
-        "CRN": "34976",
-        "profName": "Kamran   Entesari",
-        "__v": 0
-    }
-]
-
-db.once('open',async function() {
-    await MakeSchedule(["ECEN 322", "ECEN 370", "ECEN 326", "ECEN 449"])
-    console.log("Done")
-    return
-});
+// db.once('open',async function() {
+//     let sched = await MakeSchedule(["ECEN 322", "ECEN 370", "ECEN 326", "ECEN 449"])
+//     console.log("Done")
+//     console.log(sched);
+//     return
+// });
 
 // console.log(collisionCheck([{
 //     "_id" : "5e0919dec5026b6f5cfd03d3",
@@ -197,3 +162,5 @@ db.once('open',async function() {
 //     ],
 //     "__v" : 0
 // }]))
+
+module.exports = MakeSchedule;

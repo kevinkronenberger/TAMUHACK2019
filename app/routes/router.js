@@ -5,7 +5,7 @@ const bodyParser = require('body-parser')
 const courseSect = require('../models/courseSchema3.js')
 var jsonParser = bodyParser.json()
 var urlextendedParser = bodyParser.urlencoded({extended : false})
-
+let MakeSchedule = require("../scheduleGenerator/algorithm.js")
 
 
 function parseTime(timestr) {
@@ -40,8 +40,10 @@ function parseTime(timestr) {
     return retobj
 }
 
-router.post('/api', jsonParser, function (req, res) {
-    console.log("POST request recieved at /api!");
+router.post('/api', jsonParser, function (req, res) { 
+    /*This endpoint recieves post requests for class information
+     from the python server and after parsing the data, sticks it in the database*/
+    //console.log("POST request recieved at /api!");
     console.log((req.body.batch.length) + ' Sections Were Found!');
     var TBA = false;
     for (i = 0; i < req.body.batch.length; i++) {
@@ -67,47 +69,49 @@ router.post('/api', jsonParser, function (req, res) {
         //console.log(Sect)
         Sect.save();
     }
-    console.log("New Course Added to database")
+    //console.log("New Course Added to database")
     if (TBA) console.log("Some Sections are TBA")
     res.status(200).send();
 
 });
 
-router.post('/py', urlextendedParser, function(req,res,next){
-    console.log("Call to /py for " + req.body.deptName + " " + req.body.courseNum + " Sections")
-    var inDatabase = false;
-    var FoundCourse;
-    courseSect.find({
-            deptName: req.body.deptName,
-            courseNum: req.body.courseNum
-        }).then(function (result, err) {
-        if(err){
-            console.log(err)
+router.post('/py', urlextendedParser, async function(req,res,next){
+    /*This endpoint recieves calls for class data from the user.
+    If the class is already in the database, that data is used.
+    Otherwise, the Python server is called*/
+    console.log("### NEW REQUEST ###")
+    courseList = []
+    let len = req.body.courseList.length
+    let i=0
+    while(i < len){
+        console.log(i)
+        console.log("Looking for " + req.body.courseList[i].deptName + " " + req.body.courseList[i].courseNum + " Sections")
+        var inDatabase = false;
+        let courseName = req.body.courseList[i].deptName + " " + req.body.courseList[i].courseNum;
+        courseList.push(courseName)
+        let result = await courseSect.find({
+            deptName: req.body.courseList[i].deptName,
+            courseNum: req.body.courseList[i].courseNum
+        })
+        if((result != undefined) && (result.length != 0 )){
+            console.log("Found in Database!")
+            inDatabase = true;
         }
-        else{
-            if((result != undefined) && (result.length != 0 )){
-                console.log("Found in Database!\nResult = ")
-                console.log(result)
-                inDatabase = true;
-                FoundCourse = result
-            }
-        }
-    }).then(function(){
         if(!inDatabase){
             data = {
-                "DeptName": req.body.deptName,
-                "courseNum": req.body.courseNum
+                "DeptName": req.body.courseList[i].deptName,
+                "courseNum": req.body.courseList[i].courseNum
             };
             console.log("Calling Python")
-            var resData = newCourseFound('http://127.0.0.1:5000/', data).then(function(result, err){
-                //console.log(result)
-                res.send(result);
-            })
+            var resData = await newCourseFound('http://127.0.0.1:5000/', data)//.then(function(result, err){
+            console.log("Course Data Acquired")
         }
-        else{
-            res.send(FoundCourse);
-        }
-    });
+        i++;
+    }
+    console.log(courseList)
+    let combos = await MakeSchedule(courseList)
+    res.send(combos)
+    console.log("Combinations Sent!")
 });
 
 router.get('/', function (req, res, next) {
@@ -116,9 +120,13 @@ router.get('/', function (req, res, next) {
 router.get('/dummy.js', function (req, res, next) {
     res.sendFile('C:/Users/willp/Desktop/Code/TAMUHack2019/TAMUHACK2019/app/public2/dummy.js')
 })
+router.get('/dummy.css', function (req, res, next) {
+    res.sendFile('C:/Users/willp/Desktop/Code/TAMUHack2019/TAMUHACK2019/app/public2/dummy.css')
+})
 
 
 async function newCourseFound(sauce, data){
+    //This function makes an API call to Python via the callPython function
     try{
         var resData = await callPython(sauce, data);
         return resData
@@ -127,7 +135,6 @@ async function newCourseFound(sauce, data){
         console.log(error);
     }
 }
-
 
 
 module.exports= router;

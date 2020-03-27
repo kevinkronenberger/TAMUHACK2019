@@ -1,7 +1,7 @@
 const req = require('request');
 
 
-function callPython(sauce, data){
+async function callPython(sauce, data){
     return new Promise(function(resolve, reject){
         req.post({
             uri: sauce,
